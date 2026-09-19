@@ -1,0 +1,72 @@
+body {
+  margin: 0;
+  background-color: #f5f7fb;
+  font-family: Arial, sans-serif;
+}
+
+.app {
+  min-height: 100vh;
+}
+
+.welcome-section {
+  padding-top: 70px;
+  padding-bottom: 40px;
+}
+
+.assistant-card {
+  max-width: 650px;
+  margin: auto;
+  padding: 30px;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+}
+
+.assistant-card textarea {
+  resize: none;
+}
+
+.navbar-brand {
+  letter-spacing: 1px;
+}
+
+/* Voice assistance */
+
+.assistant-card .btn-success {
+  font-size: 16px;
+  font-weight: bold;
+  padding: 12px;
+}
+
+.assistant-card .btn-danger {
+  font-size: 16px;
+  font-weight: bold;
+  padding: 12px;
+}
+
+.assistant-card select {
+  padding: 10px;
+}
+
+.assistant-card textarea {
+  font-size: 16px;
+}
+
+/* Voice Output */
+
+.assistant-card .btn-secondary {
+  font-size: 16px;
+  font-weight: bold;
+  padding: 12px;
+}
+
+.assistant-card .btn-dark {
+  font-size: 16px;
+  font-weight: bold;
+  padding: 12px;
+}
+
+.assistant-card .btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
