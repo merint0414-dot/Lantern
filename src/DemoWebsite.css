@@ -172,40 +172,45 @@
 
 
 /* =========================================
-   LANTERN HIGHLIGHT
+   LANTERN ACTIVE ELEMENT HIGHLIGHT
 ========================================= */
 
 .lantern-highlight {
-  border: 3px solid #ffc107;
+  outline: 4px solid #ffc107 !important;
+  outline-offset: 4px;
 
-  padding: 12px;
+  box-shadow:
+    0 0 0 6px rgba(255, 193, 7, 0.25),
+    0 0 25px rgba(255, 193, 7, 0.75) !important;
 
-  border-radius: 10px;
+  animation: lanternPulse 1.3s infinite;
 
-  background: #fff8db;
-
-  animation: lanternPulse 1.5s infinite;
-
-  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1000;
 }
 
 
 /* =========================================
    LANTERN PULSE ANIMATION
 ========================================= */
-
 @keyframes lanternPulse {
 
   0% {
-    box-shadow: 0 0 5px rgba(255, 193, 7, 0.3);
+    box-shadow:
+      0 0 0 4px rgba(255, 193, 7, 0.20),
+      0 0 12px rgba(255, 193, 7, 0.40);
   }
 
   50% {
-    box-shadow: 0 0 20px rgba(255, 193, 7, 0.8);
+    box-shadow:
+      0 0 0 8px rgba(255, 193, 7, 0.35),
+      0 0 28px rgba(255, 193, 7, 0.90);
   }
 
   100% {
-    box-shadow: 0 0 5px rgba(255, 193, 7, 0.3);
+    box-shadow:
+      0 0 0 4px rgba(255, 193, 7, 0.20),
+      0 0 12px rgba(255, 193, 7, 0.40);
   }
 
 }
@@ -218,17 +223,21 @@
 .guidance-message {
   margin-top: 10px;
 
-  padding: 8px 10px;
+  padding: 10px 12px;
 
-  font-weight: bold;
+  font-weight: 600;
 
-  color: #856404;
+  color: #084298;
 
-  background: #fff3cd;
+  background: #e7f1ff;
+
+  border-left: 4px solid #0d6efd;
 
   border-radius: 6px;
 
   font-size: 14px;
+
+  line-height: 1.5;
 }
 
 
@@ -245,7 +254,7 @@
 
   border-radius: 8px;
 
-  background: #0d6efd;
+  background: #198754;
 
   color: white;
 
@@ -259,13 +268,9 @@
 }
 
 .register-button:hover {
-  background: #0b5ed7;
+  background: #157347;
 
   transform: translateY(-1px);
-}
-
-.register-button:active {
-  transform: translateY(0);
 }
 
 
@@ -274,15 +279,7 @@
 ========================================= */
 
 .button-guidance {
-  padding: 10px;
-
-  border: 3px solid #ffc107;
-
-  border-radius: 10px;
-
-  background: #fff8db;
-
-  animation: lanternPulse 1.5s infinite;
+  padding: 0;
 }
 
 
@@ -408,7 +405,7 @@
 
   z-index: 9999;
 
-  border: 3px solid #ffc107;
+  border: 2px solid #0d6efd;
 }
 
 
@@ -612,6 +609,36 @@
   transform: translateY(-1px);
 }
 
+/* =========================================
+   EXPLAIN AGAIN BUTTON
+========================================= */
+
+.explain-button {
+  margin-left: 10px;
+
+  padding: 11px 25px;
+
+  border: 1px solid #6c757d;
+
+  border-radius: 8px;
+
+  background: white;
+
+  color: #343a40;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.explain-button:hover {
+  background: #f1f3f5;
+
+  transform: translateY(-1px);
+}
+
 
 /* =========================================
    AUTOMATIC HELP OVERLAY
@@ -746,4 +773,49 @@
     flex-direction: column;
   }
 
+}
+
+
+/* =========================================
+   READ ALOUD BUTTON
+========================================= */
+
+.read-aloud-button {
+  margin-top: 10px;
+
+  padding: 8px 16px;
+
+  border: 1px solid #6c757d;
+  border-radius: 6px;
+
+  background: white;
+  color: #343a40;
+
+  font-size: 14px;
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.read-aloud-button:hover {
+  background: #f1f3f5;
+
+  transform: translateY(-1px);
+}
+
+.guidance-progress {
+  display: inline-block;
+
+  margin: 6px 0 8px 0;
+  padding: 4px 10px;
+
+  border-radius: 12px;
+
+  background: #e7f1ff;
+  color: #0d6efd;
+
+  font-size: 13px;
+  font-weight: bold;
 }

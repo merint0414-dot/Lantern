@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { highlightElement } from "./utils/elementDetector";
 import "./DemoWebsite.css";
 import { calculateDifficultyScore } from "./utils/difficultyDetector";
 
@@ -13,12 +14,14 @@ function DemoWebsite({
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [simpleMode, setSimpleMode] = useState(false);
 
   const [registered, setRegistered] = useState(false);
 
 
   // ==========================================
   // INTERACTION SIGNALS
+  // INTERNAL - NOT SHOWN TO USER
   // ==========================================
 
   const [repeatedClicks, setRepeatedClicks] = useState(0);
@@ -31,6 +34,7 @@ function DemoWebsite({
 
   // ==========================================
   // DIFFICULTY
+  // INTERNAL - NOT SHOWN TO USER
   // ==========================================
 
   const [difficulty, setDifficulty] = useState({
@@ -45,6 +49,9 @@ function DemoWebsite({
 
   const [automaticHelp, setAutomaticHelp] = useState(false);
 
+  const previousDifficultyScore =
+    useRef(0);
+
 
   // ==========================================
   // CURRENT GUIDANCE MESSAGE
@@ -56,19 +63,23 @@ function DemoWebsite({
 
   // ==========================================
   // CALCULATE DIFFICULTY
+  // INTERNAL LOGIC
   // ==========================================
 
   useEffect(() => {
-    const result = calculateDifficultyScore({
-      repeatedClicks,
-      formErrors,
-      scrollCount,
-      repeatedAttempts,
-      navigationCount,
-      longDelay,
-    });
+
+    const result =
+      calculateDifficultyScore({
+        repeatedClicks,
+        formErrors,
+        scrollCount,
+        repeatedAttempts,
+        navigationCount,
+        longDelay,
+      });
 
     setDifficulty(result);
+
   }, [
     repeatedClicks,
     formErrors,
@@ -84,18 +95,24 @@ function DemoWebsite({
   // ==========================================
 
   useEffect(() => {
-    if (difficulty.score >= 60) {
-      setAutomaticHelp(true);
 
-      if (guidanceStep === 0) {
-        setGuidanceStep(1);
-      }
+    // Activate LANTERN when difficulty
+    // crosses the threshold
+
+    if (
+      difficulty.score >= 60 &&
+      previousDifficultyScore.current < 60
+    ) {
+
+      setAutomaticHelp(true);
     }
-  }, [
-    difficulty.score,
-    guidanceStep,
-    setGuidanceStep,
-  ]);
+
+    // Store current score internally
+
+    previousDifficultyScore.current =
+      difficulty.score;
+
+  }, [difficulty.score]);
 
 
   // ==========================================
@@ -103,10 +120,13 @@ function DemoWebsite({
   // ==========================================
 
   useEffect(() => {
+
     const handleScroll = () => {
+
       setScrollCount(
         (previous) => previous + 1
       );
+
     };
 
     window.addEventListener(
@@ -115,11 +135,14 @@ function DemoWebsite({
     );
 
     return () => {
+
       window.removeEventListener(
         "scroll",
         handleScroll
       );
+
     };
+
   }, []);
 
 
@@ -128,13 +151,20 @@ function DemoWebsite({
   // ==========================================
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLongDelay(true);
-    }, 15000);
+
+    const timer =
+      setTimeout(() => {
+
+        setLongDelay(true);
+
+      }, 15000);
 
     return () => {
+
       clearTimeout(timer);
+
     };
+
   }, []);
 
 
@@ -144,7 +174,8 @@ function DemoWebsite({
 
   useEffect(() => {
 
-    // If name is empty
+    // Step 1 - Name
+
     if (!name) {
 
       setCurrentInstruction(
@@ -155,7 +186,8 @@ function DemoWebsite({
     }
 
 
-    // If email is empty
+    // Step 2 - Email
+
     if (!email) {
 
       setCurrentInstruction(
@@ -166,7 +198,8 @@ function DemoWebsite({
     }
 
 
-    // If password is empty
+    // Step 3 - Password
+
     if (!password) {
 
       setCurrentInstruction(
@@ -177,7 +210,8 @@ function DemoWebsite({
     }
 
 
-    // If everything is filled
+    // Step 4 - Register
+
     if (!registered) {
 
       setCurrentInstruction(
@@ -195,56 +229,168 @@ function DemoWebsite({
 
 
   // ==========================================
-  // AUTOMATICALLY UPDATE GUIDANCE STEP
+  // UI ELEMENT DETECTION
   // ==========================================
 
   useEffect(() => {
 
-    // Don't automatically change the
-    // guidance before assistance starts
     if (guidanceStep === 0) {
       return;
     }
 
+    const stepTargets = {
 
-    if (!name) {
+      1: "name",
+      2: "email",
+      3: "password",
+      4: "registerButton",
 
-      setGuidanceStep(1);
+    };
 
+    const targetName =
+      stepTargets[guidanceStep];
+
+    if (!targetName) {
+      return;
+    }
+
+    const timer =
+      setTimeout(() => {
+
+        highlightElement(targetName);
+
+      }, 300);
+
+    return () => {
+
+      clearTimeout(timer);
+
+    };
+
+  }, [guidanceStep]);
+
+
+  // ==========================================
+  // AUTOMATIC VOICE GUIDANCE
+  // ==========================================
+
+  useEffect(() => {
+
+    if (guidanceStep === 0) {
+      return;
+    }
+
+    let instruction = "";
+
+
+    // ========================================
+    // SIMPLE LANGUAGE
+    // ========================================
+
+    if (simpleMode) {
+
+      if (guidanceStep === 1) {
+
+        instruction =
+          "Step 1. Enter your name.";
+
+      }
+
+      else if (guidanceStep === 2) {
+
+        instruction =
+          "Step 2. Enter your email.";
+
+      }
+
+      else if (guidanceStep === 3) {
+
+        instruction =
+          "Step 3. Create a password.";
+
+      }
+
+      else if (guidanceStep === 4) {
+
+        instruction =
+          "Step 4. Click Register.";
+
+      }
+
+    }
+
+
+    // ========================================
+    // NORMAL LANGUAGE
+    // ========================================
+
+    else {
+
+      if (guidanceStep === 1) {
+
+        instruction =
+          "Step 1. Enter your full name in the Full Name field.";
+
+      }
+
+      else if (guidanceStep === 2) {
+
+        instruction =
+          "Step 2. Enter your email address in the Email Address field.";
+
+      }
+
+      else if (guidanceStep === 3) {
+
+        instruction =
+          "Step 3. Create a password in the Password field.";
+
+      }
+
+      else if (guidanceStep === 4) {
+
+        instruction =
+          "Step 4. Click the Register button to complete the registration.";
+
+      }
+
+    }
+
+
+    if (!instruction) {
       return;
     }
 
 
-    if (!email) {
-
-      setGuidanceStep(2);
-
-      return;
-    }
+    setCurrentInstruction(
+      instruction
+    );
 
 
-    if (!password) {
+    // Voice output
 
-      setGuidanceStep(3);
+    if ("speechSynthesis" in window) {
 
-      return;
-    }
+      window.speechSynthesis.cancel();
 
+      const speech =
+        new SpeechSynthesisUtterance(
+          instruction
+        );
 
-    if (!registered) {
+      speech.lang = "en-US";
+      speech.rate = 0.9;
+      speech.pitch = 1;
 
-      setGuidanceStep(4);
+      window.speechSynthesis.speak(
+        speech
+      );
 
-      return;
     }
 
   }, [
-    name,
-    email,
-    password,
-    registered,
     guidanceStep,
-    setGuidanceStep,
+    simpleMode,
   ]);
 
 
@@ -259,7 +405,13 @@ function DemoWebsite({
     );
 
 
-    if (!name || !email || !password) {
+    // Check required fields
+
+    if (
+      !name ||
+      !email ||
+      !password
+    ) {
 
       setFormErrors(
         (previous) => previous + 1
@@ -273,7 +425,63 @@ function DemoWebsite({
     }
 
 
+    // Registration completed
+
     setRegistered(true);
+
+
+    // ========================================
+    // RESET INTERACTION DIFFICULTY
+    // INTERNAL ONLY
+    // ========================================
+
+    setRepeatedClicks(0);
+    setFormErrors(0);
+    setScrollCount(0);
+    setRepeatedAttempts(0);
+    setNavigationCount(0);
+    setLongDelay(false);
+
+
+    // Move guidance to completed state
+
+    setGuidanceStep(0);
+
+
+    // Completion message
+
+    const completionMessage =
+      simpleMode
+        ? "Task completed successfully."
+        : "Registration completed successfully. You have finished the task.";
+
+
+    setCurrentInstruction(
+      completionMessage
+    );
+
+
+    // Read completion message aloud
+
+    if ("speechSynthesis" in window) {
+
+      window.speechSynthesis.cancel();
+
+      const speech =
+        new SpeechSynthesisUtterance(
+          completionMessage
+        );
+
+      speech.lang = "en-US";
+      speech.rate = 0.9;
+      speech.pitch = 1;
+
+      window.speechSynthesis.speak(
+        speech
+      );
+
+    }
+
   };
 
 
@@ -291,68 +499,320 @@ function DemoWebsite({
         }
 
         return previous + 1;
+
       }
     );
+
   };
 
 
   // ==========================================
-  // I'M STUCK
+  // I'M STUCK - SMART GUIDANCE
   // ==========================================
 
   const handleStuck = () => {
 
-    if (!name) {
+    let step = 0;
+    let instruction = "";
 
-      setGuidanceStep(1);
 
-      setCurrentInstruction(
-        "You're at the beginning. Enter your full name."
-      );
+    // Step 1 - Name
 
-      return;
+    if (!name.trim()) {
+
+      step = 1;
+
+      if (simpleMode) {
+
+        instruction =
+          "Enter your name.";
+
+      }
+
+      else {
+
+        instruction =
+          "Please enter your full name in the Full Name field.";
+
+      }
+
     }
 
 
-    if (!email) {
+    // Step 2 - Email
 
-      setGuidanceStep(2);
+    else if (!email.trim()) {
 
-      setCurrentInstruction(
-        "You have entered your name. Now enter your email address."
-      );
+      step = 2;
 
-      return;
+      if (simpleMode) {
+
+        instruction =
+          "Enter your email.";
+
+      }
+
+      else {
+
+        instruction =
+          "Please enter your email address in the Email Address field.";
+
+      }
+
     }
 
 
-    if (!password) {
+    // Step 3 - Password
 
-      setGuidanceStep(3);
+    else if (!password.trim()) {
 
-      setCurrentInstruction(
-        "Your email is entered. Now create your password."
-      );
+      step = 3;
 
-      return;
+      if (simpleMode) {
+
+        instruction =
+          "Create a password.";
+
+      }
+
+      else {
+
+        instruction =
+          "Please create a password in the Password field.";
+
+      }
+
     }
 
 
-    if (!registered) {
+    // Step 4 - Register
 
-      setGuidanceStep(4);
+    else if (!registered) {
 
-      setCurrentInstruction(
-        "All details are entered. Click Register to complete the task."
-      );
+      step = 4;
 
-      return;
+      if (simpleMode) {
+
+        instruction =
+          "Click Register.";
+
+      }
+
+      else {
+
+        instruction =
+          "All details are entered. Click the Register button to complete the registration.";
+
+      }
+
     }
 
+
+    // Task completed
+
+    else {
+
+      instruction =
+        "The registration task is already completed.";
+
+    }
+
+
+    // Update guidance step
+
+    if (step !== 0) {
+
+      setGuidanceStep(
+        step
+      );
+
+    }
+
+
+    // Show instruction
 
     setCurrentInstruction(
-      "The registration task is already completed."
+      instruction
     );
+
+
+    // Speak instruction
+
+    if ("speechSynthesis" in window) {
+
+      window.speechSynthesis.cancel();
+
+      const speech =
+        new SpeechSynthesisUtterance(
+          instruction
+        );
+
+      speech.lang = "en-US";
+      speech.rate = 0.9;
+      speech.pitch = 1;
+
+      window.speechSynthesis.speak(
+        speech
+      );
+
+    }
+
+  };
+
+
+  // ==========================================
+  // EXPLAIN AGAIN + VOICE
+  // ==========================================
+
+  const handleExplainAgain = () => {
+
+    let explanation = "";
+
+
+    // ========================================
+    // SIMPLE LANGUAGE
+    // ========================================
+
+    if (simpleMode) {
+
+      if (guidanceStep === 1) {
+
+        explanation =
+          "Step 1: Enter your name.";
+
+      }
+
+      else if (guidanceStep === 2) {
+
+        explanation =
+          "Step 2: Enter your email.";
+
+      }
+
+      else if (guidanceStep === 3) {
+
+        explanation =
+          "Step 3: Create a password.";
+
+      }
+
+      else if (guidanceStep === 4) {
+
+        explanation =
+          "Step 4: Click Register.";
+
+      }
+
+      else {
+
+        explanation =
+          "Please start the guided assistance first.";
+
+      }
+
+    }
+
+
+    // ========================================
+    // NORMAL LANGUAGE
+    // ========================================
+
+    else {
+
+      if (guidanceStep === 1) {
+
+        explanation =
+          "Step 1: Enter your full name in the Full Name field.";
+
+      }
+
+      else if (guidanceStep === 2) {
+
+        explanation =
+          "Step 2: Enter your email address in the Email Address field.";
+
+      }
+
+      else if (guidanceStep === 3) {
+
+        explanation =
+          "Step 3: Create a password in the Password field.";
+
+      }
+
+      else if (guidanceStep === 4) {
+
+        explanation =
+          "Step 4: Click the Register button to create your account.";
+
+      }
+
+      else {
+
+        explanation =
+          "Please start the guided assistance first.";
+
+      }
+
+    }
+
+
+    // Show explanation
+
+    setCurrentInstruction(
+      explanation
+    );
+
+
+    // ========================================
+    // RE-HIGHLIGHT CURRENT UI ELEMENT
+    // ========================================
+
+    if (guidanceStep > 0) {
+
+      const stepTargets = {
+
+        1: "name",
+        2: "email",
+        3: "password",
+        4: "registerButton",
+
+      };
+
+      const targetName =
+        stepTargets[guidanceStep];
+
+      if (targetName) {
+
+        highlightElement(
+          targetName
+        );
+
+      }
+
+    }
+
+
+    // Speak explanation
+
+    if ("speechSynthesis" in window) {
+
+      window.speechSynthesis.cancel();
+
+      const speech =
+        new SpeechSynthesisUtterance(
+          explanation
+        );
+
+      speech.lang = "en-US";
+      speech.rate = 0.9;
+      speech.pitch = 1;
+
+      window.speechSynthesis.speak(
+        speech
+      );
+
+    }
 
   };
 
@@ -366,10 +826,16 @@ function DemoWebsite({
     setAutomaticHelp(false);
 
     handleStuck();
+
   };
 
 
+  // ==========================================
+  // USER INTERFACE
+  // ==========================================
+
   return (
+
     <div className="demo-website">
 
 
@@ -471,7 +937,9 @@ function DemoWebsite({
 
             <button
               className="start-help-button"
-              onClick={startAutomaticHelp}
+              onClick={
+                startAutomaticHelp
+              }
             >
               Yes, Guide Me
             </button>
@@ -494,75 +962,8 @@ function DemoWebsite({
 
 
       {/* ======================================
-          DIFFICULTY MONITOR
-      ====================================== */}
-
-      <div className="difficulty-panel">
-
-        <h4>
-          🔦 LANTERN Difficulty Monitor
-        </h4>
-
-
-        <p>
-          Interaction Difficulty Score:
-          <strong>
-            {" "}
-            {difficulty.score}/100
-          </strong>
-        </p>
-
-
-        <p>
-          Difficulty Level:
-          <strong>
-            {" "}
-            {difficulty.level}
-          </strong>
-        </p>
-
-
-        <hr />
-
-
-        <p>
-          Repeated Clicks: {repeatedClicks}
-        </p>
-
-
-        <p>
-          Form Errors: {formErrors}
-        </p>
-
-
-        <p>
-          Scroll Count: {scrollCount}
-        </p>
-
-
-        <p>
-          Repeated Attempts: {repeatedAttempts}
-        </p>
-
-
-        <p>
-          Navigation Count: {navigationCount}
-        </p>
-
-
-        <p>
-          Long Delay:
-          {" "}
-          {longDelay
-            ? "Yes"
-            : "No"}
-        </p>
-
-      </div>
-
-
-      {/* ======================================
           SMART GUIDANCE PANEL
+          USER-FACING LANTERN PANEL
       ====================================== */}
 
       <div className="smart-guidance-panel">
@@ -575,12 +976,81 @@ function DemoWebsite({
         <div>
 
           <strong>
-            LANTERN Guidance
+            🔦 LANTERN Guidance
           </strong>
+
+
+          {/* Step Progress */}
+
+          {guidanceStep > 0 && (
+
+            <div className="guidance-progress">
+
+              Step {guidanceStep} of 4
+
+            </div>
+
+          )}
+
+
+          {/* Task Completed */}
+
+          {guidanceStep === 0 &&
+            registered && (
+
+              <div className="guidance-progress">
+
+                ✓ Task Completed
+
+              </div>
+
+            )}
+
+
+          {/* Current Instruction */}
 
           <p>
             {currentInstruction}
           </p>
+
+
+          {/* Read Aloud */}
+
+          <button
+            className="read-aloud-button"
+            onClick={() => {
+
+              if (!currentInstruction) {
+                return;
+              }
+
+              if (
+                "speechSynthesis" in window
+              ) {
+
+                window.speechSynthesis.cancel();
+
+                const speech =
+                  new SpeechSynthesisUtterance(
+                    currentInstruction
+                  );
+
+                speech.lang = "en-US";
+                speech.rate = 0.9;
+                speech.pitch = 1;
+
+                window.speechSynthesis.speak(
+                  speech
+                );
+
+              }
+
+            }}
+          >
+
+            🔊 Read Aloud
+
+          </button>
 
         </div>
 
@@ -588,7 +1058,7 @@ function DemoWebsite({
 
 
       {/* ======================================
-          I'M STUCK BUTTON
+          I'M STUCK BUTTONS
       ====================================== */}
 
       <div className="stuck-container">
@@ -597,7 +1067,29 @@ function DemoWebsite({
           className="stuck-button"
           onClick={handleStuck}
         >
-          🆘 I'm Stuck
+          I'm Stuck
+        </button>
+
+
+        <button
+          className="explain-button"
+          onClick={handleExplainAgain}
+        >
+          Explain Again
+        </button>
+
+
+        <button
+          className="simple-button"
+          onClick={() =>
+            setSimpleMode(
+              !simpleMode
+            )
+          }
+        >
+          {simpleMode
+            ? "Normal Language"
+            : "Simple Language"}
         </button>
 
       </div>
@@ -618,8 +1110,10 @@ function DemoWebsite({
 
 
           <p className="registration-description">
+
             Fill in the details below to create
             your account.
+
           </p>
 
 
@@ -627,13 +1121,7 @@ function DemoWebsite({
               STEP 1 - NAME
           ================================== */}
 
-          <div
-            className={`form-group ${
-              guidanceStep === 1
-                ? "lantern-highlight"
-                : ""
-            }`}
-          >
+          <div className="form-group">
 
             <label htmlFor="name">
               Full Name
@@ -646,8 +1134,19 @@ function DemoWebsite({
               placeholder="Enter your full name"
               value={name}
               onChange={(event) =>
-                setName(event.target.value)
+                setName(
+                  event.target.value
+                )
               }
+              onBlur={() => {
+
+                if (name.trim()) {
+
+                  setGuidanceStep(2);
+
+                }
+
+              }}
             />
 
 
@@ -669,13 +1168,7 @@ function DemoWebsite({
               STEP 2 - EMAIL
           ================================== */}
 
-          <div
-            className={`form-group ${
-              guidanceStep === 2
-                ? "lantern-highlight"
-                : ""
-            }`}
-          >
+          <div className="form-group">
 
             <label htmlFor="email">
               Email Address
@@ -688,8 +1181,19 @@ function DemoWebsite({
               placeholder="Enter your email"
               value={email}
               onChange={(event) =>
-                setEmail(event.target.value)
+                setEmail(
+                  event.target.value
+                )
               }
+              onBlur={() => {
+
+                if (email.trim()) {
+
+                  setGuidanceStep(3);
+
+                }
+
+              }}
             />
 
 
@@ -711,13 +1215,7 @@ function DemoWebsite({
               STEP 3 - PASSWORD
           ================================== */}
 
-          <div
-            className={`form-group ${
-              guidanceStep === 3
-                ? "lantern-highlight"
-                : ""
-            }`}
-          >
+          <div className="form-group">
 
             <label htmlFor="password">
               Password
@@ -730,8 +1228,19 @@ function DemoWebsite({
               placeholder="Create a password"
               value={password}
               onChange={(event) =>
-                setPassword(event.target.value)
+                setPassword(
+                  event.target.value
+                )
               }
+              onBlur={() => {
+
+                if (password.trim()) {
+
+                  setGuidanceStep(4);
+
+                }
+
+              }}
             />
 
 
@@ -753,15 +1262,10 @@ function DemoWebsite({
               STEP 4 - REGISTER
           ================================== */}
 
-          <div
-            className={
-              guidanceStep === 4
-                ? "button-guidance"
-                : ""
-            }
-          >
+          <div className="button-guidance">
 
             <button
+              id="registerButton"
               className="register-button"
               onClick={() => {
 
@@ -805,8 +1309,10 @@ function DemoWebsite({
               <br />
 
               <small>
+
                 LANTERN has detected that
                 the task is complete.
+
               </small>
 
             </div>

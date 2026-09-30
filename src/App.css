@@ -70,3 +70,74 @@ body {
   cursor: not-allowed;
   opacity: 0.6;
 }
+
+/* =========================================
+   LANTERN UI ELEMENT HIGHLIGHT
+   ========================================= */
+
+.lantern-highlight {
+  outline: 4px solid #ffc107 !important;
+  outline-offset: 4px;
+
+  box-shadow:
+    0 0 0 6px rgba(255, 193, 7, 0.25),
+    0 0 25px rgba(255, 193, 7, 0.8) !important;
+
+  position: relative;
+  z-index: 1000;
+
+  animation: lanternPulse 1.2s infinite;
+}
+
+
+/* Highlight animation */
+
+@keyframes lanternPulse {
+  0% {
+    box-shadow:
+      0 0 0 4px rgba(255, 193, 7, 0.25),
+      0 0 15px rgba(255, 193, 7, 0.5);
+  }
+
+  50% {
+    box-shadow:
+      0 0 0 8px rgba(255, 193, 7, 0.35),
+      0 0 30px rgba(255, 193, 7, 0.9);
+  }
+
+  100% {
+    box-shadow:
+      0 0 0 4px rgba(255, 193, 7, 0.25),
+      0 0 15px rgba(255, 193, 7, 0.5);
+  }
+}
+
+/* =========================================
+   SIMPLE LANGUAGE BUTTON
+========================================= */
+
+.simple-button {
+  margin-left: 10px;
+
+  padding: 11px 25px;
+
+  border: 1px solid #0d6efd;
+
+  border-radius: 8px;
+
+  background: white;
+
+  color: #0d6efd;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+.simple-button:hover {
+  background: #e7f1ff;
+
+  transform: translateY(-1px);
+}

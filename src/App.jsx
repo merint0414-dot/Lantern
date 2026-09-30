@@ -1,12 +1,21 @@
 import { useState, useRef, useEffect } from "react";
 import "./App.css";
+
 import { recognizeIntent } from "./utils/intentRecognizer";
 import DemoWebsite from "./DemoWebsite";
+import gmailWorkflow from "./workflows/gmailWorkflow";
 
 function App() {
+
   const [userRequest, setUserRequest] = useState("");
   const [message, setMessage] = useState("");
+
+  // Registration demo step
   const [guidanceStep, setGuidanceStep] = useState(0);
+
+  // Real workflow
+  const [activeWorkflow, setActiveWorkflow] = useState(null);
+  const [workflowStep, setWorkflowStep] = useState(0);
 
   const [language, setLanguage] = useState("en-IN");
   const [isListening, setIsListening] = useState(false);
@@ -14,87 +23,128 @@ function App() {
 
   const recognitionRef = useRef(null);
 
+
+  // --------------------------------------------------
+  // LOAD SPEECH VOICES
+  // --------------------------------------------------
+
   useEffect(() => {
-  if ("speechSynthesis" in window) {
-    window.speechSynthesis.getVoices();
-  }
-}, []);
+
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.getVoices();
+    }
+
+  }, []);
+
 
   // --------------------------------------------------
   // SPEAK FUNCTION
   // --------------------------------------------------
 
   const speakMessage = (text) => {
-  if (!("speechSynthesis" in window)) {
-    setMessage("Text-to-speech is not supported in this browser.");
-    return;
-  }
 
-  window.speechSynthesis.cancel();
+    if (!("speechSynthesis" in window)) {
 
-  const speech = new SpeechSynthesisUtterance(text);
-
-  speech.lang = language;
-  speech.rate = 0.85;
-  speech.pitch = 1;
-  speech.volume = 1;
-
-  const voices = window.speechSynthesis.getVoices();
-
-  if (language === "ml-IN") {
-    const malayalamVoice = voices.find(
-      (voice) =>
-        voice.lang.toLowerCase() === "ml-in" ||
-        voice.lang.toLowerCase().startsWith("ml")
-    );
-
-    if (malayalamVoice) {
-      speech.voice = malayalamVoice;
-      console.log(
-        "Malayalam voice selected:",
-        malayalamVoice.name
+      setMessage(
+        "Text-to-speech is not supported in this browser."
       );
-    } else {
-      console.log("No Malayalam voice available.");
+
+      return;
     }
-  }
 
-  if (language === "en-IN") {
-    const englishVoice = voices.find(
-      (voice) =>
-        voice.lang.toLowerCase() === "en-in"
-    );
+    window.speechSynthesis.cancel();
 
-    if (englishVoice) {
-      speech.voice = englishVoice;
+    const speech =
+      new SpeechSynthesisUtterance(text);
+
+    speech.lang = language;
+    speech.rate = 0.85;
+    speech.pitch = 1;
+    speech.volume = 1;
+
+    const voices =
+      window.speechSynthesis.getVoices();
+
+
+    // Malayalam voice
+
+    if (language === "ml-IN") {
+
+      const malayalamVoice =
+        voices.find(
+          (voice) =>
+            voice.lang.toLowerCase() === "ml-in" ||
+            voice.lang
+              .toLowerCase()
+              .startsWith("ml")
+        );
+
+      if (malayalamVoice) {
+
+        speech.voice = malayalamVoice;
+
+        console.log(
+          "Malayalam voice selected:",
+          malayalamVoice.name
+        );
+
+      } else {
+
+        console.log(
+          "No Malayalam voice available."
+        );
+
+      }
     }
-  }
 
-  speech.onstart = () => {
-    setIsSpeaking(true);
+
+    // English voice
+
+    if (language === "en-IN") {
+
+      const englishVoice =
+        voices.find(
+          (voice) =>
+            voice.lang.toLowerCase() === "en-in"
+        );
+
+      if (englishVoice) {
+        speech.voice = englishVoice;
+      }
+    }
+
+
+    speech.onstart = () => {
+      setIsSpeaking(true);
+    };
+
+
+    speech.onend = () => {
+      setIsSpeaking(false);
+    };
+
+
+    speech.onerror = (event) => {
+
+      console.log(
+        "Speech synthesis error:",
+        event.error
+      );
+
+      setIsSpeaking(false);
+    };
+
+
+    window.speechSynthesis.speak(speech);
   };
 
-  speech.onend = () => {
-    setIsSpeaking(false);
-  };
-
-  speech.onerror = (event) => {
-    console.log(
-      "Speech synthesis error:",
-      event.error
-    );
-
-    setIsSpeaking(false);
-  };
-
-  window.speechSynthesis.speak(speech);
-};
 
   // --------------------------------------------------
   // STOP SPEAKING
   // --------------------------------------------------
 
   const stopSpeaking = () => {
+
     if ("speechSynthesis" in window) {
       window.speechSynthesis.cancel();
     }
@@ -108,28 +158,266 @@ function App() {
   // --------------------------------------------------
 
   const handleStart = () => {
-    const result = recognizeIntent(userRequest);
+
+    const result =
+      recognizeIntent(userRequest);
+
+
+    // ================================================
+    // REGISTRATION
+    // ================================================
 
     if (result.intent === "REGISTER") {
+
+      setActiveWorkflow(null);
+      setWorkflowStep(0);
+
       const helpMessage =
         language === "ml-IN"
           ? "ഞാൻ നിങ്ങളെ രജിസ്റ്റർ ചെയ്യാൻ സഹായിക്കാം. ഓരോ ഘട്ടമായും ഞാൻ നിങ്ങളെ നയിക്കും."
           : "I can help you register. I will guide you one step at a time.";
 
       setMessage(helpMessage);
+
       setGuidanceStep(1);
 
       speakMessage(helpMessage);
 
-    } else {
-      const helpMessage =
-        `${result.message} (Intent: ${result.intent})`;
+      return;
+    }
 
-      setMessage(helpMessage);
+
+    // ================================================
+    // GMAIL - SEND EMAIL
+    // ================================================
+
+    if (result.intent === "GMAIL_SEND_EMAIL") {
+
+      const workflow =
+        gmailWorkflow.tasks.SEND_EMAIL;
+
+      setActiveWorkflow(workflow);
+
+      setWorkflowStep(1);
+
       setGuidanceStep(0);
 
+      const firstStep =
+        workflow.steps[0];
+
+      const helpMessage =
+        language === "ml-IN"
+          ? `Gmail സഹായം ആരംഭിക്കുന്നു. ഘട്ടം 1. ${getMalayalamGmailInstruction(firstStep)}`
+          : `Gmail assistance started. Step 1. ${firstStep.instruction}`;
+
+      setMessage(helpMessage);
+
       speakMessage(helpMessage);
+
+      return;
     }
+
+
+    // ================================================
+    // GMAIL - SEND EMAIL WITH ATTACHMENT
+    // ================================================
+
+    if (
+      result.intent ===
+      "GMAIL_SEND_ATTACHMENT"
+    ) {
+
+      const workflow =
+        gmailWorkflow.tasks
+          .SEND_EMAIL_WITH_ATTACHMENT;
+
+      setActiveWorkflow(workflow);
+
+      setWorkflowStep(1);
+
+      setGuidanceStep(0);
+
+      const firstStep =
+        workflow.steps[0];
+
+      const helpMessage =
+        language === "ml-IN"
+          ? `Gmail സഹായം ആരംഭിക്കുന്നു. ഘട്ടം 1. ${getMalayalamGmailInstruction(firstStep)}`
+          : `Gmail assistance started. Step 1. ${firstStep.instruction}`;
+
+      setMessage(helpMessage);
+
+      speakMessage(helpMessage);
+
+      return;
+    }
+
+
+    // ================================================
+    // GMAIL - REPLY
+    // ================================================
+
+    if (result.intent === "GMAIL_REPLY") {
+
+      const workflow =
+        gmailWorkflow.tasks.REPLY_EMAIL;
+
+      setActiveWorkflow(workflow);
+
+      setWorkflowStep(1);
+
+      setGuidanceStep(0);
+
+      const firstStep =
+        workflow.steps[0];
+
+      const helpMessage =
+        language === "ml-IN"
+          ? `Gmail സഹായം ആരംഭിക്കുന്നു. ഘട്ടം 1. ${getMalayalamGmailInstruction(firstStep)}`
+          : `Gmail assistance started. Step 1. ${firstStep.instruction}`;
+
+      setMessage(helpMessage);
+
+      speakMessage(helpMessage);
+
+      return;
+    }
+
+
+    // ================================================
+    // GMAIL - FIND EMAIL
+    // ================================================
+
+    if (
+      result.intent ===
+      "GMAIL_FIND_EMAIL"
+    ) {
+
+      const workflow =
+        gmailWorkflow.tasks.FIND_EMAIL;
+
+      setActiveWorkflow(workflow);
+
+      setWorkflowStep(1);
+
+      setGuidanceStep(0);
+
+      const firstStep =
+        workflow.steps[0];
+
+      const helpMessage =
+        language === "ml-IN"
+          ? `Gmail സഹായം ആരംഭിക്കുന്നു. ഘട്ടം 1. ${getMalayalamGmailInstruction(firstStep)}`
+          : `Gmail assistance started. Step 1. ${firstStep.instruction}`;
+
+      setMessage(helpMessage);
+
+      speakMessage(helpMessage);
+
+      return;
+    }
+
+
+    // ================================================
+    // OTHER INTENTS
+    // ================================================
+
+    setActiveWorkflow(null);
+    setWorkflowStep(0);
+
+    const helpMessage =
+      `${result.message} (Intent: ${result.intent})`;
+
+    setMessage(helpMessage);
+
+    setGuidanceStep(0);
+
+    speakMessage(helpMessage);
+  };
+
+
+  // --------------------------------------------------
+  // MALAYALAM GMAIL INSTRUCTIONS
+  // --------------------------------------------------
+
+  const getMalayalamGmailInstruction = (step) => {
+
+    const translations = {
+
+      compose:
+        "പുതിയ ഇമെയിൽ എഴുതാൻ Compose ക്ലിക്ക് ചെയ്യുക.",
+
+      recipient:
+        "സ്വീകർത്താവിന്റെ ഇമെയിൽ വിലാസം നൽകുക.",
+
+      subject:
+        "ഇമെയിലിന്റെ Subject നൽകുക.",
+
+      message:
+        "നിങ്ങളുടെ സന്ദേശം ടൈപ്പ് ചെയ്യുക.",
+
+      attachment:
+        "Attach files ക്ലിക്ക് ചെയ്ത് ഫയൽ തിരഞ്ഞെടുക്കുക.",
+
+      attachmentUpload:
+        "ഫയൽ അപ്‌ലോഡ് പൂർത്തിയാകുന്നത് വരെ കാത്തിരിക്കുക.",
+
+      send:
+        "ഇമെയിൽ അയയ്ക്കാൻ Send ക്ലിക്ക് ചെയ്യുക.",
+
+      reply:
+        "Reply ക്ലിക്ക് ചെയ്യുക.",
+
+      search:
+        "Gmail search box ക്ലിക്ക് ചെയ്യുക.",
+    };
+
+    return (
+      translations[step.target] ||
+      step.instruction
+    );
+  };
+
+
+  // --------------------------------------------------
+  // GMAIL NEXT STEP
+  // --------------------------------------------------
+
+  const handleWorkflowNextStep = () => {
+
+    if (!activeWorkflow) {
+      return;
+    }
+
+    setWorkflowStep((previousStep) => {
+
+      const nextStep =
+        previousStep + 1;
+
+      if (
+        nextStep >
+        activeWorkflow.steps.length
+      ) {
+
+        return activeWorkflow.steps.length;
+      }
+
+      const step =
+        activeWorkflow.steps[nextStep - 1];
+
+
+      const instruction =
+        language === "ml-IN"
+          ? `ഘട്ടം ${nextStep}. ${getMalayalamGmailInstruction(step)}`
+          : `Step ${nextStep}. ${step.instruction}`;
+
+
+      setMessage(instruction);
+
+      speakMessage(instruction);
+
+      return nextStep;
+    });
   };
 
 
@@ -138,24 +426,70 @@ function App() {
   // --------------------------------------------------
 
   const handleStuck = () => {
+
     const helpMessage =
       language === "ml-IN"
         ? "വിഷമിക്കേണ്ട. നിലവിലെ പ്രവർത്തനത്തിൽ ഞാൻ നിങ്ങളെ സഹായിക്കും."
         : "Don't worry. I will guide you through the current task.";
 
     setMessage(helpMessage);
-    setGuidanceStep(1);
 
     speakMessage(helpMessage);
+
+
+    // Gmail workflow
+
+    if (activeWorkflow) {
+
+      const currentStep =
+        activeWorkflow.steps[
+          workflowStep - 1
+        ];
+
+      if (currentStep) {
+
+        const instruction =
+          language === "ml-IN"
+            ? getMalayalamGmailInstruction(
+                currentStep
+              )
+            : currentStep.instruction;
+
+        setTimeout(() => {
+
+          setMessage(
+            language === "ml-IN"
+              ? `നിലവിലെ ഘട്ടം ${workflowStep}. ${instruction}`
+              : `You are currently on step ${workflowStep}. ${instruction}`
+          );
+
+          speakMessage(
+            language === "ml-IN"
+              ? `നിലവിലെ ഘട്ടം ${workflowStep}. ${instruction}`
+              : `You are currently on step ${workflowStep}. ${instruction}`
+          );
+
+        }, 500);
+      }
+
+      return;
+    }
+
+
+    // Registration demo
+
+    setGuidanceStep(1);
   };
 
 
   // --------------------------------------------------
-  // NEXT STEP
+  // NEXT STEP - REGISTRATION DEMO
   // --------------------------------------------------
 
   const handleNextStep = () => {
+
     setGuidanceStep((previous) => {
+
       if (previous >= 4) {
         return 4;
       }
@@ -170,27 +504,37 @@ function App() {
   // --------------------------------------------------
 
   const startVoiceRecognition = () => {
+
     const SpeechRecognition =
       window.SpeechRecognition ||
       window.webkitSpeechRecognition;
 
+
     if (!SpeechRecognition) {
+
       const errorMessage =
         "Voice recognition is not supported in this browser. Please use Google Chrome.";
 
       setMessage(errorMessage);
+
       speakMessage(errorMessage);
 
       return;
     }
 
-    const recognition = new SpeechRecognition();
+
+    const recognition =
+      new SpeechRecognition();
 
     recognition.lang = language;
+
     recognition.continuous = false;
+
     recognition.interimResults = false;
 
+
     recognition.onstart = () => {
+
       setIsListening(true);
 
       const listeningMessage =
@@ -203,10 +547,12 @@ function App() {
 
 
     recognition.onresult = (event) => {
+
       const transcript =
         event.results[0][0].transcript;
 
       setUserRequest(transcript);
+
 
       const receivedMessage =
         language === "ml-IN"
@@ -214,6 +560,7 @@ function App() {
           : `You said: "${transcript}"`;
 
       setMessage(receivedMessage);
+
 
       speakMessage(
         language === "ml-IN"
@@ -224,10 +571,12 @@ function App() {
 
 
     recognition.onerror = (event) => {
+
       console.log(
         "Speech recognition error:",
         event.error
       );
+
 
       const errorMessage =
         language === "ml-IN"
@@ -247,7 +596,8 @@ function App() {
     };
 
 
-    recognitionRef.current = recognition;
+    recognitionRef.current =
+      recognition;
 
     recognition.start();
   };
@@ -258,6 +608,7 @@ function App() {
   // --------------------------------------------------
 
   const stopVoiceRecognition = () => {
+
     if (recognitionRef.current) {
       recognitionRef.current.stop();
     }
@@ -267,15 +618,21 @@ function App() {
 
 
   // --------------------------------------------------
-  // AUTO SPEAK IMPORTANT GUIDANCE
+  // AUTO SPEAK REGISTRATION GUIDANCE
   // --------------------------------------------------
 
   useEffect(() => {
-    if (guidanceStep === 0) {
+
+    if (
+      guidanceStep === 0 ||
+      activeWorkflow
+    ) {
       return;
     }
 
+
     let instruction = "";
+
 
     if (language === "ml-IN") {
 
@@ -322,6 +679,7 @@ function App() {
       }
     }
 
+
     if (instruction) {
       speakMessage(instruction);
     }
@@ -334,7 +692,9 @@ function App() {
   // --------------------------------------------------
 
   return (
+
     <div className="app">
+
 
       {/* NAVBAR */}
 
@@ -387,6 +747,7 @@ function App() {
             🌐 Choose Language
           </label>
 
+
           <select
             className="form-select mb-3"
             value={language}
@@ -423,11 +784,13 @@ function App() {
             placeholder={
               language === "ml-IN"
                 ? "നിങ്ങൾക്ക് എന്താണ് ചെയ്യേണ്ടത്?"
-                : "Example: How do I register?"
+                : "Example: Send an email"
             }
             value={userRequest}
             onChange={(event) =>
-              setUserRequest(event.target.value)
+              setUserRequest(
+                event.target.value
+              )
             }
           />
 
@@ -506,9 +869,84 @@ function App() {
           </button>
 
 
-          {/* MESSAGE */}
+          {/* GMAIL WORKFLOW */}
 
-          {message && (
+          {activeWorkflow && (
+
+            <div className="alert alert-primary mt-4">
+
+              <h5 className="fw-bold">
+                📧 {activeWorkflow.name}
+              </h5>
+
+
+              <div className="mb-2">
+
+                Step {workflowStep} of{" "}
+                {activeWorkflow.steps.length}
+
+              </div>
+
+
+              {activeWorkflow.steps[
+                workflowStep - 1
+              ] && (
+
+                <p className="mb-2">
+
+                  {language === "ml-IN"
+                    ? getMalayalamGmailInstruction(
+                        activeWorkflow.steps[
+                          workflowStep - 1
+                        ]
+                      )
+                    : activeWorkflow.steps[
+                        workflowStep - 1
+                      ].instruction}
+
+                </p>
+              )}
+
+
+              {workflowStep <
+                activeWorkflow.steps.length && (
+
+                <button
+                  className="btn btn-primary"
+                  onClick={
+                    handleWorkflowNextStep
+                  }
+                >
+                  Next Step →
+                </button>
+
+              )}
+
+
+              {workflowStep ===
+                activeWorkflow.steps.length && (
+
+                <div className="alert alert-success mt-3 mb-0">
+
+                  ✅ Final step reached.
+                  <br />
+
+                  LANTERN is ready to guide you
+                  through the actual website.
+
+                </div>
+
+              )}
+
+            </div>
+
+          )}
+
+
+          {/* NORMAL MESSAGE */}
+
+          {message &&
+            !activeWorkflow && (
 
             <div className="alert alert-info mt-4">
 
@@ -540,13 +978,20 @@ function App() {
 
       {/* DEMO WEBSITE */}
 
-      <DemoWebsite
-        guidanceStep={guidanceStep}
-        setGuidanceStep={setGuidanceStep}
-      />
+      {!activeWorkflow && (
+
+        <DemoWebsite
+          guidanceStep={guidanceStep}
+          setGuidanceStep={
+            setGuidanceStep
+          }
+        />
+
+      )}
 
     </div>
   );
 }
+
 
 export default App;
