@@ -2,12 +2,13 @@
   "manifest_version": 3,
   "name": "LANTERN - Intelligent Web Assistance",
   "version": "1.0.0",
-  "description": "LANTERN provides contextual accessibility guidance on websites.",
+  "description": "LANTERN provides contextual accessibility guidance on websites and public service portals.",
 
   "permissions": [
     "activeTab",
     "storage",
-    "scripting"
+    "scripting",
+    "tabs"
   ],
 
   "host_permissions": [
@@ -25,7 +26,12 @@
       ],
 
       "js": [
+        "config.js",
         "intentRecognizer.js",
+        "adapters/ksrtcAdapter.js",
+        "adapters/irctcAdapter.js",
+        "adapters/bharatgasAdapter.js",
+        "adapters/ksebAdapter.js",
         "content.js"
       ],
 
