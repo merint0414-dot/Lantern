@@ -1,0 +1,739 @@
+/* =========================================================
+   LANTERN - PROFESSIONAL ACCESSIBILITY ASSISTANT
+   ========================================================= */
+
+
+/* =========================================================
+   HELP PROMPT
+   ========================================================= */
+
+#lantern-help-prompt {
+
+  position: fixed;
+
+  right: 24px;
+  bottom: 24px;
+
+  width: 340px;
+
+  box-sizing: border-box;
+
+  padding: 22px;
+
+  background: #ffffff;
+
+  color: #1f2937;
+
+  border: 1px solid #e5e7eb;
+
+  border-top: 4px solid #f5b800;
+
+  border-radius: 16px;
+
+  box-shadow:
+    0 20px 45px rgba(0, 0, 0, 0.18),
+    0 4px 12px rgba(0, 0, 0, 0.08);
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
+  z-index: 2147483647;
+
+  animation:
+    lanternPopupAppear
+    0.25s
+    ease-out;
+
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+#lantern-help-title {
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  margin-bottom: 7px;
+
+  font-size: 20px;
+
+  font-weight: 700;
+
+  letter-spacing: -0.3px;
+
+  color: #111827;
+
+}
+
+
+/* Small status indicator */
+
+#lantern-help-title::after {
+
+  content: "READY";
+
+  display: inline-block;
+
+  margin-left: auto;
+
+  padding: 4px 8px;
+
+  border-radius: 20px;
+
+  background: #ecfdf3;
+
+  color: #16803c;
+
+  font-size: 9px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.6px;
+
+}
+
+
+/* =========================================================
+   MESSAGE
+   ========================================================= */
+
+#lantern-help-message {
+
+  margin-bottom: 16px;
+
+  font-size: 14px;
+
+  line-height: 1.5;
+
+  color: #6b7280;
+
+}
+
+
+/* =========================================================
+   INPUT
+   ========================================================= */
+
+#lantern-help-input {
+
+  display: block;
+
+  width: 100%;
+
+  height: 46px;
+
+  box-sizing: border-box;
+
+  padding: 0 13px;
+
+  margin: 0 0 10px 0;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 9px;
+
+  outline: none;
+
+  background: #f9fafb;
+
+  color: #111827;
+
+  font-family: inherit;
+
+  font-size: 14px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+
+}
+
+
+#lantern-help-input::placeholder {
+
+  color: #9ca3af;
+
+}
+
+
+#lantern-help-input:focus {
+
+  background: #ffffff;
+
+  border-color: #f5b800;
+
+  box-shadow:
+    0 0 0 3px rgba(245, 184, 0, 0.15);
+
+}
+
+
+/* =========================================================
+   VOICE BUTTON
+   ========================================================= */
+
+#lantern-help-voice {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  width: 100%;
+
+  height: 40px;
+
+  margin: 0 0 14px 0;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 9px;
+
+  background: #ffffff;
+
+  color: #374151;
+
+  font-family: inherit;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.15s ease;
+
+}
+
+
+#lantern-help-voice:hover {
+
+  background: #f9fafb;
+
+  border-color: #9ca3af;
+
+}
+
+
+#lantern-help-voice:active {
+
+  transform: scale(0.98);
+
+}
+
+
+/* =========================================================
+   BUTTON CONTAINER
+   ========================================================= */
+
+#lantern-help-buttons {
+
+  display: flex;
+
+  gap: 10px;
+
+}
+
+
+/* =========================================================
+   COMMON BUTTON
+   ========================================================= */
+
+#lantern-help-buttons button {
+
+  flex: 1;
+
+  height: 42px;
+
+  padding: 0 14px;
+
+  border-radius: 9px;
+
+  font-family: inherit;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+
+}
+
+
+#lantern-help-buttons button:active {
+
+  transform: scale(0.98);
+
+}
+
+
+/* =========================================================
+   GET HELP
+   ========================================================= */
+
+#lantern-help-get {
+
+  border: 1px solid #d49d00;
+
+  background: #f5b800;
+
+  color: #111827;
+
+  box-shadow:
+    0 3px 8px rgba(245, 184, 0, 0.22);
+
+}
+
+
+#lantern-help-get:hover {
+
+  background: #ffc928;
+
+  border-color: #e0a900;
+
+  box-shadow:
+    0 5px 12px rgba(245, 184, 0, 0.28);
+
+}
+
+
+/* =========================================================
+   NOT NOW
+   ========================================================= */
+
+#lantern-help-no {
+
+  border: 1px solid #d1d5db;
+
+  background: #ffffff;
+
+  color: #4b5563;
+
+}
+
+
+#lantern-help-no:hover {
+
+  background: #f9fafb;
+
+  border-color: #9ca3af;
+
+}
+
+
+/* =========================================================
+   GUIDANCE MESSAGE
+   ========================================================= */
+
+#lantern-guidance-message {
+
+  position: fixed;
+
+  right: 24px;
+  bottom: 24px;
+
+  width: 320px;
+
+  box-sizing: border-box;
+
+  padding: 19px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+
+  border-top: 4px solid #f5b800;
+
+  border-radius: 14px;
+
+  box-shadow:
+    0 16px 40px rgba(0, 0, 0, 0.18);
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Arial,
+    sans-serif;
+
+  color: #1f2937;
+
+  z-index: 2147483647;
+
+  animation:
+    lanternGuidanceAppear
+    0.25s
+    ease-out;
+
+}
+
+
+.lantern-guidance-title {
+
+  font-size: 17px;
+
+  font-weight: 700;
+
+  margin-bottom: 8px;
+
+  color: #111827;
+
+}
+
+
+.lantern-guidance-text {
+
+  font-size: 14px;
+
+  line-height: 1.55;
+
+  color: #4b5563;
+
+}
+
+
+/* =========================================================
+   ATTACHMENT TOGGLE SWITCH
+   ========================================================= */
+
+.lantern-toggle-row {
+
+  display: flex !important;
+
+  align-items: center !important;
+
+  justify-content: space-between !important;
+
+  margin-top: 10px !important;
+
+  margin-bottom: 6px !important;
+
+  padding: 8px 12px !important;
+
+  background: #202326 !important;
+
+  border: 1px solid #484c51 !important;
+
+  border-radius: 9px !important;
+
+}
+
+
+.lantern-toggle-info {
+
+  display: flex !important;
+
+  align-items: center !important;
+
+  gap: 8px !important;
+
+  font-size: 12px !important;
+
+  font-weight: 700 !important;
+
+  color: #e5e7eb !important;
+
+  user-select: none !important;
+
+}
+
+
+.lantern-toggle-icon {
+
+  font-size: 15px !important;
+
+}
+
+
+.lantern-switch {
+
+  position: relative !important;
+
+  display: inline-block !important;
+
+  width: 42px !important;
+
+  height: 22px !important;
+
+  flex-shrink: 0 !important;
+
+}
+
+
+.lantern-switch input {
+
+  opacity: 0 !important;
+
+  width: 0 !important;
+
+  height: 0 !important;
+
+  position: absolute !important;
+
+}
+
+
+.lantern-slider {
+
+  position: absolute !important;
+
+  cursor: pointer !important;
+
+  top: 0 !important;
+
+  left: 0 !important;
+
+  right: 0 !important;
+
+  bottom: 0 !important;
+
+  background-color: #4b5563 !important;
+
+  transition: all 0.2s ease !important;
+
+  border-radius: 22px !important;
+
+}
+
+
+.lantern-slider:before {
+
+  position: absolute !important;
+
+  content: "" !important;
+
+  height: 16px !important;
+
+  width: 16px !important;
+
+  left: 3px !important;
+
+  bottom: 3px !important;
+
+  background-color: #ffffff !important;
+
+  transition: all 0.2s ease !important;
+
+  border-radius: 50% !important;
+
+}
+
+
+.lantern-switch input:checked + .lantern-slider {
+
+  background-color: #f5b800 !important;
+
+}
+
+
+.lantern-switch input:checked + .lantern-slider:before {
+
+  transform: translateX(20px) !important;
+
+  background-color: #111827 !important;
+
+}
+
+
+/* =========================================================
+   NEXT STEP BUTTON
+   ========================================================= */
+
+.lantern-next-btn {
+
+  width: 100% !important;
+
+  margin-top: 12px !important;
+
+  margin-bottom: 4px !important;
+
+  padding: 10px 14px !important;
+
+  font-size: 13px !important;
+
+  font-weight: 750 !important;
+
+  background: #f59e0b !important;
+
+  color: #111827 !important;
+
+  border: none !important;
+
+  border-radius: 8px !important;
+
+  cursor: pointer !important;
+
+  display: flex !important;
+
+  align-items: center !important;
+
+  justify-content: center !important;
+
+  gap: 6px !important;
+
+  transition: all 0.15s ease !important;
+
+  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3) !important;
+
+}
+
+
+.lantern-next-btn:hover {
+
+  background: #d97706 !important;
+
+  transform: translateY(-1px) !important;
+
+}
+
+
+/* =========================================================
+   VERY BRIGHT ELEMENT HIGHLIGHT
+   ========================================================= */
+
+#lantern-bright-highlight {
+
+  position: fixed !important;
+
+  box-sizing: border-box !important;
+
+  pointer-events: none !important;
+
+  border: 4px solid #ffd000 !important;
+
+  border-radius: 8px !important;
+
+  z-index: 2147483646 !important;
+
+  animation:
+    lanternBrightPulse
+    1s
+    infinite;
+
+}
+
+
+/* =========================================================
+   HIGHLIGHT ANIMATION
+   ========================================================= */
+
+@keyframes lanternBrightPulse {
+
+  0% {
+
+    opacity: 0.75;
+
+    box-shadow:
+      0 0 5px #ffd000,
+      0 0 15px #ffd000,
+      0 0 30px #ffd000;
+
+  }
+
+  50% {
+
+    opacity: 1;
+
+    box-shadow:
+      0 0 10px #ffd000,
+      0 0 25px #ffd000,
+      0 0 50px #ffd000,
+      0 0 70px rgba(255, 208, 0, 0.9);
+
+  }
+
+  100% {
+
+    opacity: 0.75;
+
+    box-shadow:
+      0 0 5px #ffd000,
+      0 0 15px #ffd000,
+      0 0 30px #ffd000;
+
+  }
+
+}
+
+
+/* =========================================================
+   POPUP ANIMATION
+   ========================================================= */
+
+@keyframes lanternPopupAppear {
+
+  from {
+
+    opacity: 0;
+
+    transform:
+      translateY(15px)
+      scale(0.97);
+
+  }
+
+  to {
+
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+
+  }
+
+}
+
+
+/* =========================================================
+   GUIDANCE ANIMATION
+   ========================================================= */
+
+@keyframes lanternGuidanceAppear {
+
+  from {
+
+    opacity: 0;
+
+    transform:
+      translateY(15px)
+      scale(0.97);
+
+  }
+
+  to {
+
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+
+  }
+
+}
