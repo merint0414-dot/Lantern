@@ -144,15 +144,31 @@ function isKsrtcRequest(text) {
     "ksrtc",
     "book ksrtc",
     "ksrtc bus",
+    "ksrtc bus service",
     "book bus",
+    "book a bus",
+    "book bus ticket",
+    "book a bus ticket",
     "bus booking",
     "bus ticket",
+    "bus service",
     "reserve bus",
+    "reserve a bus",
     "reserve bus ticket",
     "kerala rtc",
+    "kerala bus",
+    "rtc bus",
     "help me book a bus",
     "i want to book a bus",
-    "book bus ticket",
+    "i need a bus",
+    "i need a bus service",
+    "i need a ksrtc bus service",
+    "i need ksrtc",
+    "need bus",
+    "take bus",
+    "travel by bus",
+    "bus travel",
+    "bus journey",
 
     // Manglish
     "ksrtc bus book cheyyanam",
@@ -166,6 +182,9 @@ function isKsrtcRequest(text) {
     "ksrtc help",
     "enikku bus book cheyyanam",
     "bus yathra",
+    "bus venam",
+    "ksrtc bus venam",
+    "bus ticket venam",
 
     // Malayalam
     "കെ.എസ്.ആർ.ടി.സി",
@@ -175,7 +194,9 @@ function isKsrtcRequest(text) {
     "ബസ് ടിക്കറ്റ് എടുക്കണം",
     "കെഎസ്ആർടിസി ബുക്കിംഗ്",
     "ബസ് യാത്ര",
-    "എനിക്ക് ബസ് ബുക്ക് ചെയ്യണം"
+    "എനിക്ക് ബസ് ബുക്ക് ചെയ്യണം",
+    "ബസ് വേണം",
+    "ബസ്"
   ];
 
   return phrases.some((phrase) => text.includes(phrase));
@@ -190,16 +211,31 @@ function isIrctcRequest(text) {
     // English
     "irctc",
     "book train",
+    "book a train",
+    "book train ticket",
+    "book a train ticket",
     "irctc train",
     "book irctc",
     "railway booking",
+    "railway ticket",
     "train ticket",
+    "train booking",
+    "train service",
+    "railway service",
     "reserve train",
+    "reserve a train",
     "reserve train ticket",
     "book railway ticket",
     "help me book a train",
     "i want to book a train",
-    "train booking",
+    "i need a train",
+    "i need a train ticket",
+    "i need a train service",
+    "need train",
+    "rail ticket",
+    "take train",
+    "travel by train",
+    "train journey",
 
     // Manglish
     "train book cheyyanam",
@@ -211,6 +247,8 @@ function isIrctcRequest(text) {
     "irctc help",
     "enikku train book cheyyanam",
     "rail ticket",
+    "train venam",
+    "train ticket venam",
 
     // Malayalam
     "ട്രെയിൻ ബുക്ക് ചെയ്യണം",
@@ -219,7 +257,9 @@ function isIrctcRequest(text) {
     "ഐആർസിടിസി",
     "റെയിൽവേ ടിക്കറ്റ് ബുക്കിംഗ്",
     "ട്രെയിൻ യാത്ര",
-    "എനിക്ക് ട്രെയിൻ ബുക്ക് ചെയ്യണം"
+    "എനിക്ക് ട്രെയിൻ ബുക്ക് ചെയ്യണം",
+    "ട്രെയിൻ വേണം",
+    "ട്രെയിൻ"
   ];
 
   return phrases.some((phrase) => text.includes(phrase));
@@ -235,13 +275,24 @@ function isBharatgasRequest(text) {
     "bharatgas",
     "bharat gas",
     "book gas",
+    "book a gas",
+    "book gas cylinder",
+    "book cylinder",
     "gas booking",
+    "gas service",
     "lpg cylinder",
     "lpg refill",
+    "lpg booking",
     "cylinder booking",
     "gas cylinder",
+    "gas cylinder booking",
+    "gas refill",
+    "cylinder refill",
     "help me book gas",
     "i want to book gas",
+    "i need gas",
+    "i need a gas cylinder",
+    "need gas",
     "book bharatgas",
     "refill booking",
 
@@ -254,6 +305,8 @@ function isBharatgasRequest(text) {
     "gas refill",
     "enikku gas book cheyyanam",
     "aduppu gas",
+    "gas venam",
+    "cylinder venam",
 
     // Malayalam
     "ഗ്യാസ് ബുക്ക് ചെയ്യണം",
@@ -262,7 +315,9 @@ function isBharatgasRequest(text) {
     "സിലിണ്ടർ ബുക്ക് ചെയ്യണം",
     "എൽ.പി.ജി ബുക്കിംഗ്",
     "ഗ്യാസ് സിലിണ്ടർ",
-    "എനിക്ക് ഗ്യാസ് ബുക്ക് ചെയ്യണം"
+    "എനിക്ക് ഗ്യാസ് ബുക്ക് ചെയ്യണം",
+    "ഗ്യാസ് വേണം",
+    "ഗ്യാസ്"
   ];
 
   return phrases.some((phrase) => text.includes(phrase));
@@ -278,20 +333,30 @@ function isKsebRequest(text) {
     "kseb",
     "electricity bill",
     "pay electricity bill",
+    "pay electricity",
     "pay kseb bill",
-    "current bill",
-    "power bill",
     "pay kseb",
+    "current bill",
+    "pay current bill",
+    "power bill",
+    "electric bill",
+    "pay bill",
+    "bill payment",
     "electricity bill payment",
     "help me pay electricity bill",
     "i want to pay electricity bill",
-    "pay current bill",
+    "i need to pay electricity bill",
+    "i need to pay current bill",
+    "i need to pay my bill",
+    "current charge",
 
     // Manglish
     "kseb bill adakkanam",
     "current bill adakkanam",
     "current bill pay cheyyanam",
     "electricity bill adakkanam",
+    "bill adakkanam",
+    "bill pay cheyyanam",
     "kseb payment",
     "current charge",
     "enikku kseb bill adakkanam",
@@ -305,7 +370,43 @@ function isKsebRequest(text) {
     "കെ.എസ്.ഇ.ബി ബിൽ അടയ്ക്കണം",
     "കെഎസ്ഇബി പേയ്മെന്റ്",
     "വൈദ്യുതി ബിൽ",
+    "കറന്റ് ബിൽ",
     "എനിക്ക് കെഎസ്ഇബി ബിൽ അടയ്ക്കണം"
+  ];
+
+  return phrases.some((phrase) => text.includes(phrase));
+}
+
+// ============================================================
+// ALL BOOKINGS / GENERAL BOOKING INQUIRY
+// ============================================================
+
+function isAllBookingsRequest(text) {
+  const phrases = [
+    // English
+    "all booking",
+    "all bookings",
+    "booking",
+    "bookings",
+    "book ticket",
+    "ticket booking",
+    "what can i book",
+    "show bookings",
+    "show all bookings",
+    "show services",
+    "available services",
+    "services",
+    "help me book",
+
+    // Manglish
+    "ella booking",
+    "booking cheyyam",
+    "enthellam booking",
+
+    // Malayalam
+    "എല്ലാ ബുക്കിംഗ്",
+    "ബുക്കിംഗ് സേവനങ്ങൾ",
+    "ബുക്കിംഗ്"
   ];
 
   return phrases.some((phrase) => text.includes(phrase));
@@ -369,7 +470,7 @@ function recognizeLanternIntent(userInput) {
   }
 
   // ----------------------------------------------------------
-  // KSRTC BUS BOOKING
+  // KSRTC BUS BOOKING ("Book Bus")
   // ----------------------------------------------------------
   if (isKsrtcRequest(text)) {
     return {
@@ -377,12 +478,17 @@ function recognizeLanternIntent(userInput) {
       confidence: 0.95,
       route: "/ksrtc",
       serviceId: "ksrtc",
-      message: "I can help you book a KSRTC bus ticket step by step."
+      actionLabel: "Book Bus",
+      buttonId: "home-btn-ksrtc",
+      serviceName: "KSRTC Bus Booking",
+      message: "I can help you book a KSRTC bus ticket step by step.",
+      instruction: "Click 'Book Bus' to start booking your KSRTC bus ticket.",
+      instructionMl: "കെ.എസ്.ആർ.ടി.സി ബസ് ബുക്കിംഗ് ആരംഭിക്കാൻ 'Book Bus' ക്ലിക്ക് ചെയ്യുക."
     };
   }
 
   // ----------------------------------------------------------
-  // IRCTC RAILWAY BOOKING
+  // IRCTC RAILWAY BOOKING ("Book Train")
   // ----------------------------------------------------------
   if (isIrctcRequest(text)) {
     return {
@@ -390,12 +496,17 @@ function recognizeLanternIntent(userInput) {
       confidence: 0.95,
       route: "/irctc",
       serviceId: "irctc",
-      message: "I can help you book an IRCTC train ticket step by step."
+      actionLabel: "Book Train",
+      buttonId: "home-btn-irctc",
+      serviceName: "IRCTC Railway Booking",
+      message: "I can help you book an IRCTC train ticket step by step.",
+      instruction: "Click 'Book Train' to start booking your IRCTC railway ticket.",
+      instructionMl: "ട്രെയിൻ ടിക്കറ്റ് ബുക്കിംഗ് ആരംഭിക്കാൻ 'Book Train' ക്ലിക്ക് ചെയ്യുക."
     };
   }
 
   // ----------------------------------------------------------
-  // BHARATGAS LPG BOOKING
+  // BHARATGAS LPG BOOKING ("Book Gas")
   // ----------------------------------------------------------
   if (isBharatgasRequest(text)) {
     return {
@@ -403,12 +514,17 @@ function recognizeLanternIntent(userInput) {
       confidence: 0.95,
       route: "/bharatgas",
       serviceId: "bharatgas",
-      message: "I can help you book your Bharatgas LPG cylinder refill."
+      actionLabel: "Book Gas",
+      buttonId: "home-btn-bharatgas",
+      serviceName: "Bharatgas Booking",
+      message: "I can help you book your Bharatgas LPG cylinder refill.",
+      instruction: "Click 'Book Gas' to book your Bharatgas LPG cylinder refill.",
+      instructionMl: "എൽ.പി.ജി സിലിണ്ടർ ബുക്കിംഗിനായി 'Book Gas' ക്ലിക്ക് ചെയ്യുക."
     };
   }
 
   // ----------------------------------------------------------
-  // KSEB ELECTRICITY BILL PAYMENT
+  // KSEB ELECTRICITY BILL PAYMENT ("Pay Electricity Bill")
   // ----------------------------------------------------------
   if (isKsebRequest(text)) {
     return {
@@ -416,7 +532,27 @@ function recognizeLanternIntent(userInput) {
       confidence: 0.95,
       route: "/kseb",
       serviceId: "kseb",
-      message: "I can help you check and pay your KSEB electricity bill."
+      actionLabel: "Pay Electricity Bill",
+      buttonId: "home-btn-kseb",
+      serviceName: "KSEB Bill Payment",
+      message: "I can help you check and pay your KSEB electricity bill.",
+      instruction: "Click 'Pay Electricity Bill' to view and pay your electricity bill.",
+      instructionMl: "വൈദ്യുതി ബിൽ അടയ്ക്കാനായി 'Pay Electricity Bill' ക്ലിക്ക് ചെയ്യുക."
+    };
+  }
+
+  // ----------------------------------------------------------
+  // ALL BOOKINGS ("All Booking")
+  // ----------------------------------------------------------
+  if (isAllBookingsRequest(text)) {
+    return {
+      intent: "ALL_BOOKINGS",
+      confidence: 0.95,
+      actionLabel: "All Bookings",
+      serviceName: "Interactive Services",
+      message: "You can book Bus (KSRTC), Train (IRCTC), Gas (Bharatgas), or Pay Electricity Bill (KSEB).",
+      instruction: "Choose any service: Click 'Book Bus', 'Book Train', 'Book Gas', or 'Pay Electricity Bill'.",
+      instructionMl: "ബസ്, ട്രെയിൻ, ഗ്യാസ് അല്ലെങ്കിൽ വൈദ്യുതി ബിൽ - ഏത് സേവനമാണ് വേണ്ടതെന്ന് തിരഞ്ഞെടുക്കുക."
     };
   }
 
@@ -470,7 +606,7 @@ function recognizeLanternIntent(userInput) {
   return {
     intent: "UNKNOWN",
     confidence: 0,
-    message: "I couldn't understand that request. Try asking 'Book KSRTC bus', 'Book train', 'Book gas', or 'Pay electricity bill'."
+    message: "I couldn't understand that request. Try asking 'Book bus', 'Book train', 'Book gas', or 'Pay electricity bill'."
   };
 }
 

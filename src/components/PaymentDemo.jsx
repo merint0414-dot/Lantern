@@ -261,6 +261,10 @@ export default function PaymentDemo({
               <label
                 className={`method-option-card ${method === "upi" ? "selected" : ""}`}
                 htmlFor={`${serviceId}-method-upi`}
+                onClick={() => {
+                  const el = document.getElementById(methodSelectId);
+                  if (el) el.dataset.methodChosen = "true";
+                }}
               >
                 <input
                   type="radio"
@@ -271,6 +275,8 @@ export default function PaymentDemo({
                   onChange={() => {
                     setMethod("upi");
                     setErrors({});
+                    const el = document.getElementById(methodSelectId);
+                    if (el) el.dataset.methodChosen = "true";
                   }}
                   data-lantern-action="select-method-upi"
                 />
@@ -286,6 +292,10 @@ export default function PaymentDemo({
               <label
                 className={`method-option-card ${method === "debit" ? "selected" : ""}`}
                 htmlFor={`${serviceId}-method-debit`}
+                onClick={() => {
+                  const el = document.getElementById(methodSelectId);
+                  if (el) el.dataset.methodChosen = "true";
+                }}
               >
                 <input
                   type="radio"
@@ -296,6 +306,8 @@ export default function PaymentDemo({
                   onChange={() => {
                     setMethod("debit");
                     setErrors({});
+                    const el = document.getElementById(methodSelectId);
+                    if (el) el.dataset.methodChosen = "true";
                   }}
                   data-lantern-action="select-method-debit"
                 />
@@ -311,6 +323,10 @@ export default function PaymentDemo({
               <label
                 className={`method-option-card ${method === "credit" ? "selected" : ""}`}
                 htmlFor={`${serviceId}-method-credit`}
+                onClick={() => {
+                  const el = document.getElementById(methodSelectId);
+                  if (el) el.dataset.methodChosen = "true";
+                }}
               >
                 <input
                   type="radio"
@@ -321,6 +337,8 @@ export default function PaymentDemo({
                   onChange={() => {
                     setMethod("credit");
                     setErrors({});
+                    const el = document.getElementById(methodSelectId);
+                    if (el) el.dataset.methodChosen = "true";
                   }}
                   data-lantern-action="select-method-credit"
                 />
@@ -336,6 +354,10 @@ export default function PaymentDemo({
               <label
                 className={`method-option-card ${method === "netbanking" ? "selected" : ""}`}
                 htmlFor={`${serviceId}-method-netbanking`}
+                onClick={() => {
+                  const el = document.getElementById(methodSelectId);
+                  if (el) el.dataset.methodChosen = "true";
+                }}
               >
                 <input
                   type="radio"
@@ -346,6 +368,8 @@ export default function PaymentDemo({
                   onChange={() => {
                     setMethod("netbanking");
                     setErrors({});
+                    const el = document.getElementById(methodSelectId);
+                    if (el) el.dataset.methodChosen = "true";
                   }}
                   data-lantern-action="select-method-netbanking"
                 />
@@ -388,12 +412,14 @@ export default function PaymentDemo({
                     />
                     <button
                       type="button"
+                      id={`${serviceId}-demo-fill`}
                       className="btn-quick-fill"
                       onClick={() => {
                         setUpiId("demo.user@okhdfcbank");
                         if (errors.upiId) setErrors({ ...errors, upiId: null });
                       }}
                       title="Auto-fill sample UPI ID"
+                      data-lantern-action="demo-fill"
                     >
                       <Sparkles size={13} aria-hidden="true" />
                       <span>Demo Fill</span>

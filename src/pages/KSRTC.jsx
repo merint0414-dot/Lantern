@@ -23,8 +23,8 @@ export default function KSRTC() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
 
   // Form State
-  const [fromLoc, setFromLoc] = useState("Thrissur");
-  const [toLoc, setToLoc] = useState("Ernakulam");
+  const [fromLoc, setFromLoc] = useState("");
+  const [toLoc, setToLoc] = useState("");
   const [journeyDate, setJourneyDate] = useState(() => {
     const tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
@@ -580,6 +580,7 @@ export default function KSRTC() {
 
                 <button
                   type="button"
+                  id="ksrtc-confirm-seats"
                   className="btn-primary"
                   onClick={handleSeatConfirm}
                   disabled={selectedSeats.length === 0}

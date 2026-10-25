@@ -42,7 +42,10 @@ const gmailWorkflow = {
           action: "input",
           target: "recipient",
           instruction:
-            "Enter the recipient's email address."
+            "Enter or autofill the recipient's email address.",
+          numberOfRecipients: 1,
+          supportsAutofill: true,
+          supportsMultipleRecipients: true
         },
 
         {
@@ -87,7 +90,8 @@ const gmailWorkflow = {
         "send mail with attachment",
         "attach a file",
         "send assignment",
-        "send document"
+        "send document",
+        "email attachment to multiple people"
       ],
 
       steps: [
@@ -105,7 +109,10 @@ const gmailWorkflow = {
           action: "input",
           target: "recipient",
           instruction:
-            "Enter the recipient's email address."
+            "Enter or autofill the recipient's email address.",
+          numberOfRecipients: 1,
+          supportsAutofill: true,
+          supportsMultipleRecipients: true
         },
 
         {

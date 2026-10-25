@@ -107,3 +107,21 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   }
   return true;
 });
+
+// ------------------------------------------------------------
+// EXTENSION TOOLBAR ICON CLICK LISTENER
+// Summons LANTERN on the active tab, or opens landing page
+// ------------------------------------------------------------
+if (chrome.action && chrome.action.onClicked) {
+  chrome.action.onClicked.addListener((tab) => {
+    if (tab && tab.id) {
+      chrome.tabs.sendMessage(tab.id, { action: "SUMMON_LANTERN" }, () => {
+        if (chrome.runtime.lastError) {
+          checkAndOpenLandingPage();
+        }
+      });
+    } else {
+      checkAndOpenLandingPage();
+    }
+  });
+}

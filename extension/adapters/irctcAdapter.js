@@ -138,13 +138,28 @@
         label: "Select Train",
         instruction: "Choose a train from the available results.",
         instructionMl: "ലഭ്യമായ ട്രെയിനുകളിൽ നിന്ന് ഒരെണ്ണം തിരഞ്ഞെടുക്കുക.",
-        selector: "#irctc-select-train, .btn-book-train",
+        selector: "#irctc-select-train, [id^='irctc-select-train'], .btn-book-train, [data-lantern-action='select-train']",
         getElement() {
-          return (
-            document.getElementById("irctc-select-train") ||
-            document.querySelector(".btn-book-train") ||
-            document.querySelector('[data-lantern-action="select-train"]')
-          );
+          const all = Array.from(
+            document.querySelectorAll("#irctc-select-train, [id^='irctc-select-train'], .btn-book-train, [data-lantern-action='select-train']")
+          ).filter((el) => {
+            const rect = el.getBoundingClientRect();
+            return rect.width > 0 && rect.height > 0;
+          });
+          const vh = window.innerHeight || 800;
+          const inView = all.find((el) => {
+            const rect = el.getBoundingClientRect();
+            return rect.top >= 40 && rect.bottom <= vh - 40;
+          });
+          return inView || all[0] || null;
+        },
+        getAllElements() {
+          return Array.from(
+            document.querySelectorAll("#irctc-select-train, [id^='irctc-select-train'], .btn-book-train, [data-lantern-action='select-train']")
+          ).filter((el) => {
+            const rect = el.getBoundingClientRect();
+            return rect.width > 0 && rect.height > 0;
+          });
         },
         isComplete() {
           return Boolean(
